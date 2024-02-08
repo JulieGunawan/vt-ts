@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-const SearchBar = () => {
-  const [input, setInput] = useState('');
-  const [articles, setArticles] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isAtEnd, setIsAtEnd] = useState(true);
-  const [isAtBeginning, setIsAtBeginning] = useState(true);
+interface Post{
+  id:number;
+  slug:string;
+  title:string;
+  content:string;
+  published_at:Date;
+  deleted_at:Date;
+}
 
-  const handleChange = (event) => {
+const SearchBar = () => {
+  const [input, setInput] = useState<string>('');
+  const [articles, setArticles] = useState<Post[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [isAtEnd, setIsAtEnd] = useState<boolean>(true);
+  const [isAtBeginning, setIsAtBeginning] = useState<boolean>(true);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
     setPage(1);
   };
@@ -39,7 +48,7 @@ const SearchBar = () => {
           const data = await response.json();
 
           const newData = data.filter(
-            (post) =>
+            (post:Post) =>
               post.title.toLowerCase().includes(input.toLowerCase()) &&
               post.deleted_at == null &&
               post.published_at != null,
@@ -49,7 +58,7 @@ const SearchBar = () => {
           setIsAtEnd(newData.length < 6); // Check if there are less than 6 items on the current page
           setIsAtBeginning(page === 1);
         }
-      } catch (error) {
+      } catch (error:any) {
         console.log(error.message);
       }
     };
