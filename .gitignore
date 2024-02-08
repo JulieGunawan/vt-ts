@@ -1,0 +1,5 @@
+/vt-frontend/node_modules
+/vt-backend/node_modules
+/vt-frontend/.env
+/vt-backend/.env
+/vt-backend/config

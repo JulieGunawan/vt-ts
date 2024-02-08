@@ -1,0 +1,58 @@
+body {
+  background-image: linear-gradient(
+    to right,
+    rgba(27, 176, 188, 0.5),
+    rgba(117, 110, 203, 0.5)
+  );
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  color: #0f7fc6;
+}
+
+h1 {
+  text-align: center;
+  font-size: 64px;
+  line-height: 64px;
+}
+
+img {
+  margin-left: 20px;
+  width: 35%;
+  display: block;
+}
+
+ul {
+  list-style-type: none;
+  display: inline-flex;
+  margin-left: auto;
+  padding: 0;
+}
+
+li {
+  display: inline;
+  vertical-align: middle;
+  padding: 8px;
+}
+
+li a {
+  display: block;
+}
+
+.buttons Button {
+  margin: 0 10px;
+}
+
+input{
+  width:100%;
+}

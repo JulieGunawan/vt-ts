@@ -1,0 +1,30 @@
+.App {
+  max-width: 1280px;
+  margin: 25px auto;
+}
+
+.searchBar {
+  margin: 20px auto;
+  width: 80%;
+}
+
+.searchBar form {
+  background-color: #fff;
+  padding: 5px 15px;
+  box-shadow: 0px 0px 8px #b1bdbe;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.searchBar input {
+  background-color: transparent;
+  border: none;
+}
+
+.searchPage h2 {
+  text-align: center;
+}
+.addBlog {
+  display: block;
+}
