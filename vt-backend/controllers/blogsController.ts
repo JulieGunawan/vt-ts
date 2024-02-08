@@ -1,14 +1,23 @@
-const Blog = require('../models/Blog');
-const { Op } = require('sequelize');
+import {Request, Response} from 'express';
+import Blog from '../models/Blog';
+import { Op } from 'sequelize';
 
-module.exports = {
-  getAllBlogs: async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
-    const startIndex = (page - 1) * limit;
+interface BlogAttributes {
+  id: number;
+  title: string;
+  slug: string;
+  content: string | null;
+  published_at: Date | null;
+  deleted_at: Date | null;
+}
+
+export const getAllBlogs= async (req: Request, res: Response) => {
+    const page:number = parseInt(req.query.page as string) || 1;
+    const limit:number = parseInt(req.query.limit as string) || 6;
+    const startIndex:number = (page - 1) * limit;
 
     try {
-      const allBlogs = await Blog.findAll({
+      const allBlogs: BlogAttributes[] = await Blog.findAll({
         order: [['published_at', 'DESC']],
         limit: limit,
         offset: startIndex,
@@ -23,13 +32,14 @@ module.exports = {
       });
 
       res.json(allBlogs);
-    } catch (err) {
+    } catch (err:any) {
       console.log(err.message);
     }
-  },
-  getBlogBySlug: async (req, res) => {
+  }
+
+  export const getBlogBySlug= async (req:Request, res:Response) => {
     try {
-      const blog = await Blog.findOne({
+      const blog:BlogAttributes | null = await Blog.findOne({
         where: {
           slug: req.params.slug,
           deleted_at: {
@@ -45,14 +55,15 @@ module.exports = {
       } else {
         res.status(404).json({ message: 'Blog not found' });
       }
-    } catch (err) {
+    } catch (err:any) {
       console.log(err.message);
     }
-  },
-  getBlogById: async (req, res) => {
+  }
+  
+  export const getBlogById= async (req:Request, res:Response) => {
     try {
       console.log('here', req.params.id);
-      const blog = await Blog.findOne({
+      const blog:BlogAttributes | null = await Blog.findOne({
         where: {
           id: req.params.id,
           deleted_at: {
@@ -68,15 +79,16 @@ module.exports = {
       } else {
         res.status(404).json({ message: 'Blog not found' });
       }
-    } catch (err) {
+    } catch (err:any) {
       console.log(err.message);
     }
-  },
-  getRandomBlogs: async (req, res) => {
+  }
+  
+  export const getRandomBlogs= async (req:Request, res:Response) => {
     try {
       console.log('random part');
-      const randomBlogs = [];
-      const usedIds = new Set();
+      const randomBlogs: BlogAttributes[] = [];
+      const usedIds:Set<number> = new Set();
 
       while (randomBlogs.length < 4) {
         // Ensure we have 4 unique blogs
@@ -84,7 +96,7 @@ module.exports = {
 
         if (!usedIds.has(randomId)) {
           console.log('random id is', randomId);
-          const blog = await Blog.findOne({
+          const blog:BlogAttributes | null = await Blog.findOne({
             where: {
               id: randomId,
               deleted_at: {
@@ -107,28 +119,30 @@ module.exports = {
       } else {
         res.status(404).json({ message: 'Blogs not found' });
       }
-    } catch (err) {
+    } catch (err:any) {
       console.log(err.message);
     }
-  },
-  createOneBlog: async (req, res) => {
+  }
+
+  export const createOneBlog= async (req:Request, res:Response) => {
     try {
-      const newBlog = await Blog.create(req.body);
+      const newBlog:BlogAttributes = await Blog.create(req.body);
       res.json(newBlog);
-    } catch (err) {
+    } catch (err:any) {
       console.log(err);
     }
-  },
-  updateOneBlog: async (req, res) => {
+  }
+
+  export const updateOneBlog= async (req:Request, res:Response) => {
     try {
-      const updatedBlog = await Blog.update(req.body, {
+      const updatedBlog:BlogAttributes = await Blog.update(req.body, {
         where: {
-          id: req.params.id,
+          id: parseInt(req.params.id),
         },
       });
       res.json(updatedBlog);
-    } catch (err) {
+    } catch (err:any) {
       console.log(err);
     }
-  },
-};
+  }
+

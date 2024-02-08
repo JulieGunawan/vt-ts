@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-interface Post{
+interface IPost{
   id:number;
   slug:string;
   title:string;
@@ -14,12 +14,13 @@ interface Post{
   deleted_at:Date;
 }
 
-const SearchBar = () => {
+const SearchBar:React.FC = () => {
   const [input, setInput] = useState<string>('');
-  const [articles, setArticles] = useState<Post[]>([]);
+  const [articles, setArticles] = useState<IPost[] >([]);
   const [page, setPage] = useState<number>(1);
   const [isAtEnd, setIsAtEnd] = useState<boolean>(true);
   const [isAtBeginning, setIsAtBeginning] = useState<boolean>(true);
+  const [error,setError] = useState<null | string>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -48,7 +49,7 @@ const SearchBar = () => {
           const data = await response.json();
 
           const newData = data.filter(
-            (post:Post) =>
+            (post:IPost) =>
               post.title.toLowerCase().includes(input.toLowerCase()) &&
               post.deleted_at == null &&
               post.published_at != null,
@@ -58,8 +59,9 @@ const SearchBar = () => {
           setIsAtEnd(newData.length < 6); // Check if there are less than 6 items on the current page
           setIsAtBeginning(page === 1);
         }
-      } catch (error:any) {
-        console.log(error.message);
+      } catch (err:any) {
+          setError((err as Error).message);
+          console.log(error);
       }
     };
     renderBlogs();
@@ -82,7 +84,7 @@ const SearchBar = () => {
         <div className="searchPage">
           <h2>Search Results:</h2>
           <Grid container spacing={2}>
-            {articles.map((post) => (
+            {articles.map((post:IPost) => (
               <Grid item xs={12} sm={6} md={4} lg={4} key={post.id}>
                 <Link className="list-result" to={`/${post.slug}`}>
                   <h3>{post.title}</h3>
