@@ -5,16 +5,17 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-interface IPost{
+interface IPost {
   id:number;
   slug:string;
   title:string;
   content:string;
-  published_at:Date;
-  deleted_at:Date;
+  published_at?:Date | string;
+  deleted_at?:Date;
 }
-
-const SearchBar:React.FC = () => {
+//https://www.youtube.com/watch?v=FJDVKeh7RJI&t=1032s
+const SearchBar:React.FC<IPost> = ({id, slug, title, content}) => {
+  
   const [input, setInput] = useState<string>('');
   const [articles, setArticles] = useState<IPost[] >([]);
   const [page, setPage] = useState<number>(1);
@@ -96,7 +97,7 @@ const SearchBar:React.FC = () => {
                   />
                   <div>
                     Published at:{' '}
-                    {new Date(post.published_at).toLocaleString('en-US', {
+                    {new Date(post.published_at as string).toLocaleString('en-US', {
                       year: 'numeric',
                       month: '2-digit',
                       day: '2-digit',

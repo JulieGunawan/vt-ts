@@ -8,6 +8,8 @@ interface BlogAttributes {
   slug: string;
   content: string | null;
   published_at: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
   deleted_at: Date | null;
 }
 
@@ -135,14 +137,32 @@ export const getAllBlogs= async (req: Request, res: Response) => {
 
   export const updateOneBlog= async (req:Request, res:Response) => {
     try {
-      const updatedBlog:BlogAttributes = await Blog.update(req.body, {
+      const id= parseInt(req.params.id);
+
+      const [affectedRowsCount] = await Blog.update(req.body, {
         where: {
-          id: parseInt(req.params.id),
+          id: id,
         },
       });
-      res.json(updatedBlog);
+
+      if (affectedRowsCount > 0) {
+        // Fetch the updated blog record
+        const updatedBlog = await Blog.findByPk(id);
+  
+        if (updatedBlog) {
+          res.json(updatedBlog);
+        } else {
+          // Handle case where the blog record was not found after update
+          res.status(404).json({ message: 'Blog not found after update' });
+        }
+      } else {
+        // Handle case where no rows were affected by the update
+        res.status(404).json({ message: 'No blog was updated' });
+      }
+      
     } catch (err:any) {
       console.log(err);
+      res.status(500).json({ message: 'Internal server error' });
     }
   }
 
