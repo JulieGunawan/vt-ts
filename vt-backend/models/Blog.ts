@@ -1,5 +1,5 @@
 'use strict';
-import {Model} from 'sequelize';
+import {Model, DataTypes} from 'sequelize';
 import database from '../src/db';
 
 interface BlogAttributes {
@@ -13,8 +13,8 @@ interface BlogAttributes {
   createdAt: Date;
   updatedAt: Date;
 }
-module.exports = (sequelize:any, DataTypes:any) => {
-  class Blog extends Model<BlogAttributes> implements BlogAttributes {
+// module.exports = (sequelize:any, DataTypes:any) => {
+ export class Blog extends Model<BlogAttributes> implements BlogAttributes {
     //  * Helper method for defining associations.
     //  * This method is not a part of Sequelize lifecycle.
     //  * The `models/index` file will call this method automatically.
@@ -69,7 +69,8 @@ module.exports = (sequelize:any, DataTypes:any) => {
     }, {
       sequelize: database,
       modelName: 'Blog',
+      tableName: 'Blogs'
     }
   );
-  return Blog;
-};
+  // return Blog;
+// };
