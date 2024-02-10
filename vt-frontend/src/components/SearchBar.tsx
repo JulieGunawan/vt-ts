@@ -1,29 +1,20 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import { Blog } from './Blog.types';
 
-interface IPost {
-  id:number;
-  slug:string;
-  title:string;
-  content:string;
-  published_at?:Date | string;
-  deleted_at?:Date;
-}
-//https://www.youtube.com/watch?v=FJDVKeh7RJI&t=1032s
-const SearchBar:React.FC<IPost> = ({id, slug, title, content}) => {
-  
+const SearchBar:React.FC<Blog> = () => {
   const [input, setInput] = useState<string>('');
-  const [articles, setArticles] = useState<IPost[] >([]);
+  const [articles, setArticles] = useState<Blog[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isAtEnd, setIsAtEnd] = useState<boolean>(true);
   const [isAtBeginning, setIsAtBeginning] = useState<boolean>(true);
   const [error,setError] = useState<null | string>(null);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
     setPage(1);
   };
@@ -50,7 +41,7 @@ const SearchBar:React.FC<IPost> = ({id, slug, title, content}) => {
           const data = await response.json();
 
           const newData = data.filter(
-            (post:IPost) =>
+            (post:Blog) =>
               post.title.toLowerCase().includes(input.toLowerCase()) &&
               post.deleted_at == null &&
               post.published_at != null,
@@ -85,7 +76,7 @@ const SearchBar:React.FC<IPost> = ({id, slug, title, content}) => {
         <div className="searchPage">
           <h2>Search Results:</h2>
           <Grid container spacing={2}>
-            {articles.map((post:IPost) => (
+            {articles.map((post:Blog) => (
               <Grid item xs={12} sm={6} md={4} lg={4} key={post.id}>
                 <Link className="list-result" to={`/${post.slug}`}>
                   <h3>{post.title}</h3>
@@ -97,7 +88,7 @@ const SearchBar:React.FC<IPost> = ({id, slug, title, content}) => {
                   />
                   <div>
                     Published at:{' '}
-                    {new Date(post.published_at as string).toLocaleString('en-US', {
+                    {new Date(post.published_at as Date).toLocaleString('en-US', {
                       year: 'numeric',
                       month: '2-digit',
                       day: '2-digit',
