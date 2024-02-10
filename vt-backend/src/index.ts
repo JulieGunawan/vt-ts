@@ -1,28 +1,24 @@
-// import express, { Express, Request, Response } from 'express';
+
 import express from 'express';
-import cors from 'cors';
-// import database from './db.js';
 import dotenv from 'dotenv';
-// import { Sequelize } from 'sequelize-typescript';
-import path from 'path';
-// import router from '../routes/blogs.js';
+import db from '../models';
+import cors from 'cors';
+// import router from '../routes/blogs';
+import database from './db';
 
-dotenv.config();
-
-// //test DB
-// const connectToDB = async() => {
-//   await database
-//     .authenticate()
-//     .then(() => {
-//       console.log('Database connected');
-//     })
-//     .catch((err:any) => {
-//       console.log('Error: ' + err.message);
-//     });
-//   };
-  
-//create express app
 const app = express();
+const PORT = 5000;
+
+const connectToDB = async() => {
+  await database
+    .authenticate()
+    .then(() => {
+      console.log('Database connected');
+    })
+    .catch((err:any) => {
+      console.log('Error: ' + err.message);
+    });
+  };
 
 // middleware
 const corsOptions = {
@@ -35,35 +31,24 @@ app.use(express.urlencoded({ extended: false }));
 //Routes for blogs API calls
 // app.use('/blogs', router);
 
+app.get('/blogs', (req, res) => {
+  db.Blog.findAll()
+  .then(
+    (result:object) => res.json(result)).catch((err:object)=>
+    console.log(err)
+  );
+}
+);
 
-// Serve frontend
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, '../vt-frontend/build')));
 
-//   app.get('*', (req:Request, res:Response) =>
-//     res.sendFile(
-//       path.resolve(__dirname, '../', 'vt-frontend', 'build', 'index.html')
-//     )
-//   );
-// } else {
-//   app.get('/', (req:Request, res:Response) => res.send('Please set to production'));
-// }
-
-// app.use(errorHandler);
-
-const PORT = process.env.PORT || 5000;
+// db.sequelize.sync()
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log(`Server running on port ${PORT}`);
+//     });
+//   })
 
 app.listen(PORT, () => {
-  // connectToDB();
+  connectToDB();
   console.log(`server running on port ${PORT}`);
 });
-
-// Synchronize models with the database
-// database
-//   .sync()
-//   .then(() => {
-//     console.log('Database synchronized');
-//   })
-//   .catch((err:any) => {
-//     console.error('Error synchronizing database:', err);
-//   });

@@ -1,5 +1,6 @@
-import {Table, Column, Model, DataType, CreatedAt, UpdatedAt} from 'sequelize-typescript';
-import sequelize from '../src/db';
+'use strict';
+import {Model} from 'sequelize';
+import database from '../src/db';
 
 interface BlogAttributes {
   id: number;
@@ -12,62 +13,63 @@ interface BlogAttributes {
   createdAt: Date;
   updatedAt: Date;
 }
+module.exports = (sequelize:any, DataTypes:any) => {
+  class Blog extends Model<BlogAttributes> implements BlogAttributes {
+    //  * Helper method for defining associations.
+    //  * This method is not a part of Sequelize lifecycle.
+    //  * The `models/index` file will call this method automatically.
+    id!: number;
+    title!: string;
+    slug!: string;
+    content!: string | null;
+    image!: string | null;
+    published_at!: Date | null;
+    deleted_at!: Date | null;
+    createdAt!: Date;
+    updatedAt!: Date;
+    static associate(models:any) {
+      // define association here
+    }
+  };
 
-// class Blog extends Model<BlogAttributes> implements BlogAttributes {} 
-@Table({
-  timestamps: true,
-  tableName: 'Blogs',
-  modelName: 'Blog',
-})
-
-class Blog extends Model {
-  @Column (
-  {
-    primaryKey: true,
-    type: DataType.INTEGER,
-    autoIncrement: true,
-  })
-  declare  id:number;
-      
-  @Column ({
-    type: DataTypes.STRING,
-    allowNull: false,
-  })
-  declare title:string;
-
-  @Column ({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true,
-  })
-  declare slug: string
-      
-  @Column ({
-    type: DataType.TEXT,
-  }) 
-  declare content: string;
-  
-  @Column ({
-    type: DataType.STRING,
-  })
-  declare image: string;
-
-  @Column ({
-    type: DataType.DATE,
-  })
-  declare published_at: Date;
-  
-  @Column ({
-    type: DataType.DATE,
-  })
-  declare deleted_at: Date;
-    
-  @CreatedAt
-  declare createdAt: Date;
-    
-  @UpdatedAt
-  declare updatedAt: Date;
-    
+  Blog.init(
+    {
+      id: {
+        type:DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      slug: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      content: {
+        type:DataTypes.TEXT,
+      },
+      image: {
+        type: DataTypes.STRING,
+      },
+      published_at: {
+        type: DataTypes.DATE,
+      },
+      deleted_at: {
+        type: DataTypes.DATE,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+      }
+    }, {
+      sequelize: database,
+      modelName: 'Blog',
+    }
+  );
+  return Blog;
 };
-
-export default Blog;
