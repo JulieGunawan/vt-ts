@@ -1,11 +1,14 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-const Dialog = ({ message, onConfirm }) => {
+import { DialogProps } from './Blog.types';
+
+const Dialog:React.FC<DialogProps> = ({message, onConfirm}:DialogProps) => {
   if (!message) {
     return null;
   }
 
+  console.log("what is on confirm", onConfirm);
   return (
     <div className="dialog" onClick={() => onConfirm(false)}>
       <div onClick={(e) => e.stopPropagation()}>

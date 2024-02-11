@@ -4,15 +4,17 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import { Blog } from './Blog.types';
 
-const SearchBar = () => {
-  const [input, setInput] = useState('');
-  const [articles, setArticles] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isAtEnd, setIsAtEnd] = useState(true);
-  const [isAtBeginning, setIsAtBeginning] = useState(true);
+const SearchBar:React.FC<Blog> = () => {
+  const [input, setInput] = useState<string>('');
+  const [articles, setArticles] = useState<Blog[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [isAtEnd, setIsAtEnd] = useState<boolean>(true);
+  const [isAtBeginning, setIsAtBeginning] = useState<boolean>(true);
+  const [error,setError] = useState<null | string>(null);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
     setPage(1);
   };
@@ -39,7 +41,7 @@ const SearchBar = () => {
           const data = await response.json();
 
           const newData = data.filter(
-            (post) =>
+            (post:Blog) =>
               post.title.toLowerCase().includes(input.toLowerCase()) &&
               post.deleted_at == null &&
               post.published_at != null,
@@ -49,8 +51,9 @@ const SearchBar = () => {
           setIsAtEnd(newData.length < 6); // Check if there are less than 6 items on the current page
           setIsAtBeginning(page === 1);
         }
-      } catch (error) {
-        console.log(error.message);
+      } catch (err:any) {
+          setError((err as Error).message);
+          console.log(error);
       }
     };
     renderBlogs();
@@ -73,7 +76,7 @@ const SearchBar = () => {
         <div className="searchPage">
           <h2>Search Results:</h2>
           <Grid container spacing={2}>
-            {articles.map((post) => (
+            {articles.map((post:Blog) => (
               <Grid item xs={12} sm={6} md={4} lg={4} key={post.id}>
                 <Link className="list-result" to={`/${post.slug}`}>
                   <h3>{post.title}</h3>
@@ -85,7 +88,7 @@ const SearchBar = () => {
                   />
                   <div>
                     Published at:{' '}
-                    {new Date(post.published_at).toLocaleString('en-US', {
+                    {new Date(post.published_at as Date).toLocaleString('en-US', {
                       year: 'numeric',
                       month: '2-digit',
                       day: '2-digit',

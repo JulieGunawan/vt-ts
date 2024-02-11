@@ -5,19 +5,20 @@ import DeleteSection from './DeleteSection';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { Blog } from './Blog.types';
 
-const Post = () => {
-  const [articles, setArticles] = useState([]);
-  const [randomBlogs, setRandomBlogs] = useState([]);
-  const { name } = useParams();
+const Post:React.FC = () => {
+  const [articles, setArticles] = useState<Blog|null>(null);
+  const [randomBlogs, setRandomBlogs] = useState<Blog[]>([]);
+  const { name } = useParams<string>();
   const getBlogs = async () => {
     try {
       const response = await fetch(
         `http://localhost:5000/blogs/getBySlug/${name}`,
       );
-      const data = await response.json();
+      const data:Blog = await response.json();
       setArticles(data);
-    } catch (error) {
+    } catch (error:any) {
       console.log(error.message);
     }
   };
@@ -25,9 +26,9 @@ const Post = () => {
   const generateRandomBlogs = async () => {
     try {
       const response = await fetch('http://localhost:5000/blogs/random');
-      const randomData = await response.json();
+      const randomData:Blog[] = await response.json();
       setRandomBlogs(randomData);
-    } catch (error) {
+    } catch (error:any) {
       console.log(error.message);
     }
   };
@@ -41,15 +42,15 @@ const Post = () => {
     <>
       <Container maxWidth="lg">
         <Header />
-        <h1>{articles.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: articles.content }} />
+        <h1>{articles? articles.title:"article not found"}</h1>
+        <div dangerouslySetInnerHTML={articles? { __html: articles.content }: { __html: <p>article not found</p> }} />
         <p>
           Published at:{' '}
-          {new Date(articles.published_at).toLocaleString('en-US', {
+          {articles? new Date(articles.published_at as Date).toLocaleString('en-US', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-          })}
+          }) : ''}
         </p>
         <DeleteSection />
         <Box
@@ -63,7 +64,7 @@ const Post = () => {
         >
           <h3>You Might Also Like</h3>
           <Grid container spacing={2}>
-            {randomBlogs.map((post) => {
+            {randomBlogs.map((post:Blog) => {
               return (
                 <Grid item xs={12} md={6} lg={3} key={post.id}>
                   <Link className="list-item" to={`/${post.slug}`}>
@@ -76,7 +77,7 @@ const Post = () => {
                       />
                       <p>
                         Published at:{' '}
-                        {new Date(post.published_at).toLocaleString('en-US', {
+                        {new Date(post.published_at as Date).toLocaleString('en-US', {
                           year: 'numeric',
                           month: '2-digit',
                           day: '2-digit',

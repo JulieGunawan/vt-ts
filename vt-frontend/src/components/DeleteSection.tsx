@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-const AddBlogSection = () => {
+const AddBlogSection: React.FC = () => {
   const location = useLocation();
   const url = location.pathname;
 
