@@ -131,6 +131,20 @@ app.get('/blogs/random', async (req, res) => {
   }
 });
 
+app.put('/blogs/:id', async (req, res) => {
+  try {
+    const updatedBlog = await Blog.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    console.log("id is",req.params.id);
+    res.json(updatedBlog);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 const PORT = 5000;
 
 app.listen(PORT, () => {

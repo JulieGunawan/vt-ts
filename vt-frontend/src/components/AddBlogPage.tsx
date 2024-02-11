@@ -4,14 +4,17 @@ import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-//functionality to add a Blog
-const AddBlogPage = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [slug, setSlug] = useState('');
-  const [image, setImage] = useState('');
+// Interface for the blog object
 
-  const handleSubmit = async (e) => {
+
+//functionality to add a Blog
+const AddBlogPage:React.FC = () => {
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [slug, setSlug] = useState<string>('');
+  const [image, setImage] = useState<string>('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const published_at = new Date();
@@ -35,7 +38,7 @@ const AddBlogPage = () => {
       } else {
         alert('You might enter a duplicate slug');
       }
-    } catch (error) {
+    } catch (error:any) {
       console.log(error.message);
     }
   };
@@ -63,7 +66,7 @@ const AddBlogPage = () => {
               />
        
           <label>Content:</label>
-          <textarea cols="100" rows="10"
+          <textarea cols={100} rows={10}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
@@ -75,7 +78,7 @@ const AddBlogPage = () => {
           <label>Image URL:</label>
           <input
                 type="text"
-                size="40"
+                size={40}
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
