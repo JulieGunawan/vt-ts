@@ -36,18 +36,6 @@ app.use(express.urlencoded({ extended: false }));
 // app.use('/blogs', router);
 
 
-// Serve frontend
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, '../vt-frontend/build')));
-
-//   app.get('*', (req, res) =>
-//     res.sendFile(
-//       path.resolve(__dirname, '../', 'vt-frontend', 'build', 'index.html')
-//     )
-//   );
-// } else {
-//   app.get('/', (req, res) => res.send('Please set to production'));
-// }
 
 app.get('/blogs', async (req, res) =>{
   try{
@@ -75,11 +63,19 @@ app.get('/blogs', async (req, res) =>{
   }
 });
 
+
+
 app.get('/blogs/getBySlug/:slug', async (req, res) => {
   try {
     const blog = await Blog.findOne({
       where: {
         slug: req.params.slug as string,
+        deleted_at: {
+          [Op.is]: null,
+        },
+        published_at: {
+          [Op.ne]: null,
+        },
       },
     });
     if (blog) {
@@ -158,6 +154,14 @@ app.put('/blogs/:id', async (req, res) => {
   }
 });
 
+app.post('/blogs', async (req, res)  => {
+  try {
+    const newBlog = await Blog.create(req.body);
+    res.json(newBlog);
+  } catch (err) {
+    console.log(err);
+  }
+});
 const PORT = 5000;
 
 app.listen(PORT, () => {

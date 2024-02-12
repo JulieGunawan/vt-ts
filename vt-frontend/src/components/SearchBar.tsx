@@ -16,6 +16,7 @@ const SearchBar:React.FC<Blog> = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
+    console.log(input);
     setPage(1);
   };
 
@@ -36,7 +37,7 @@ const SearchBar:React.FC<Blog> = () => {
           setIsAtBeginning(true);
         } else {
           const response = await fetch(
-            `http://localhost:5000/blogs?page=${page}&limit=6`,
+            `http://localhost:5000/blogs?page=${page}&limit=7`,
           );
           const data = await response.json();
 
