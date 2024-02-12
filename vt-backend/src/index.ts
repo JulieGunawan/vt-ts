@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
 import path  from 'path';
 import {Blog} from '../models/Blog';
+import { Op } from 'sequelize';
 // import router from'../routes/blogs';
 dotenv.config();
 
@@ -55,7 +56,19 @@ app.get('/blogs', async (req, res) =>{
     const startIndex = (page - 1) * limit;
 
     console.log(limit);
-    const records = await Blog.findAll({ where:{}, limit:limit, offset:startIndex});
+    const records = await Blog.findAll({
+      order: [['published_at', 'DESC']],
+      limit: limit,
+      offset: startIndex,
+      where: {
+        deleted_at: {
+          [Op.is]: null,
+        },
+        published_at: {
+          [Op.ne]: null,
+        },
+      },
+    });
     return res.json(records);
   } catch (e){
     return res.json({msg:'fail to read', status: 500, route: '/blogs'});
